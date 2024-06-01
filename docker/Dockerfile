@@ -55,14 +55,6 @@ RUN mkdir -p /var/log/supervisor && \
 
 COPY bash/profile .profile
 
-# Install InfluxDB
-RUN wget https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb && \
- dpkg -i influxdb_${INFLUXDB_VERSION}_amd64.deb && rm influxdb_${INFLUXDB_VERSION}_amd64.deb
-
-# Configure InfluxDB
-COPY influxdb/influxdb.conf /etc/influxdb/influxdb.conf
-RUN chmod 0777 /var/lib/influxdb
-
 #install syslog-ng 
 COPY syslog/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 
@@ -79,15 +71,6 @@ RUN chmod 0777 /etc/init.d/telegraf
 # Install Chronograf
 RUN wget https://dl.influxdata.com/chronograf/releases/chronograf_${CHRONOGRAF_VERSION}_amd64.deb && \
  dpkg -i chronograf_${CHRONOGRAF_VERSION}_amd64.deb  && rm chronograf_${CHRONOGRAF_VERSION}_amd64.deb
-
-# Install Grafana
-RUN wget https://dl.grafana.com/oss/release/grafana_${GRAFANA_VERSION}_amd64.deb && \
- dpkg -i grafana_${GRAFANA_VERSION}_amd64.deb && rm grafana_${GRAFANA_VERSION}_amd64.deb
-
-# Configure Grafana with provisioning
-ADD grafana/provisioning /etc/grafana/provisioning
-COPY grafana/grafana.ini /etc/grafana/grafana.ini
-RUN chmod 0777 /var/lib/grafana
 
 # Synology SNMP
 COPY synology/* /usr/share/snmp/mibs
